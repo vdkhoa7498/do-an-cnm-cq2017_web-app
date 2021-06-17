@@ -22,7 +22,7 @@ function RouteLayout(props) {
       <Content style={{ padding: "0 24px", minHeight: 380 }}>
         {children}
       </Content>
-      <Footer style={{ textAlign: "center" }}>Website Learning @2021</Footer>
+      <Footer style={{ textAlign: "center" }}>Website Charity @2021</Footer>
     </Layout>
   );
 }

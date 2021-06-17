@@ -1,11 +1,14 @@
 import { Button, Menu, Dropdown, message, Tooltip } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import './styles.scss'
 
 const HeaderBar = (props) =>{
+    const history = useHistory();
+
     const onLogout = () =>{
-        
+        localStorage.clear()
+        history.go(0);
     }
 
     const menu = (
@@ -14,13 +17,6 @@ const HeaderBar = (props) =>{
                 <Link to="/profile">
                 <Button type="text">
                     Profile
-                </Button>
-                </Link>
-            </Menu.Item>
-            <Menu.Item key="2">
-                <Link to="/change-password">
-                <Button type="text">
-                    Change Password
                 </Button>
                 </Link>
             </Menu.Item>
@@ -53,7 +49,8 @@ const HeaderBar = (props) =>{
         </Dropdown>
     );
     const isAuthenticated = localStorage.getItem("isAuthenticated");
-    
+    const name = localStorage.getItem('name')
+    console.log('name', name)
     return(
         <div className="header-bar">
             <Link to="/" className="logo-item">Logo</Link>
@@ -65,17 +62,17 @@ const HeaderBar = (props) =>{
                     (!props.user)
                     ? null
                     :<Link to="/profile" className="profile-container">
-                        <div className="avatar">
+                        {/* <div className="avatar">
                         {
                             (!props.user.picture)
                             ? props.user.fullName[0]
                             : <img alt="Avatar" src={props.user.picture}></img>
                         }
-                        </div>
-                    <Tooltip title={`${props.user.fullName}`} color="#00152a" >
-                        <div className="name">
-                            {props.user.fullName}
-                        </div>
+                        </div> */}
+                        <Tooltip title={`${props.user.fullName}`} color="#00152a" >
+                            <div className="name" style={{color: "white"}}>
+                                {name}
+                            </div>
                         </Tooltip>
                     </Link>
                     }
@@ -85,10 +82,10 @@ const HeaderBar = (props) =>{
                 :
                 <div className="tool">
                     <Link to="/login" key="link_1">
-                        <Button className="button" shape="round" type="primary">Đăng nhập</Button>
+                        <Button className="button" shape="round" type="primary">Login</Button>
                     </Link>
                     <Link to="/register" key="link_2">
-                        <Button className="button" shape="round" type="primary">Đăng Ký</Button>
+                        <Button className="button" shape="round" type="primary">Register</Button>
                     </Link>
                 </div>
             }
