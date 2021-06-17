@@ -3,23 +3,27 @@ import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import './styles.scss';
 import { Link, useHistory } from 'react-router-dom'
+import { loginService } from '../../services/user.service';
 
 const Login = (props) =>{
     const history = useHistory();
 
     const onFinish = (values) =>{
-        const form = {...values}
-        const login = ({
-            form,
-            onSuccess: (model) =>{
-                message.success(`Welcome, ${model.fullName}!`);
-                history.push("/")
-            },
-            onFailure: (error) =>{
-                console.log(error)
+        loginService(values)
+        .then((res) =>{
+            console.log(res)
+            if (res.data.name) {
+                localStorage.setItem('name', res.data.name);
+                localStorage.setItem('address', res.data.address);
+                localStorage.setItem('isAuthenticated', true);
+                message.success(`Wellcome ${res.data.name}!`)
+                history.push('/');
+            }
+            else {
+                message.warning(res.data.status)
             }
         })
-        login();
+        .catch((err)=>{console.log(err)})
     }
 
     return(
@@ -29,7 +33,7 @@ const Login = (props) =>{
                 className="login-form"
             >
                 <Link to="/">
-                    <div className="login-form__image">Logo</div>
+                    <h1>Logo</h1>
                     {/* <img src={Logo} className="login-form__image" alt="Online Learning" /> */}
                 </Link>
                 <Form.Item
@@ -58,7 +62,6 @@ const Login = (props) =>{
                     ]}
                 >
                     <Input 
-                        autoComplete="privateKey"
                         prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
                         placeholder="privateKey"
                     />
