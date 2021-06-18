@@ -7,7 +7,7 @@ import RouterOutlet from './index.route';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{padding: 5}}>
       <ConfigProvider>
         <RouterOutlet/>
       </ConfigProvider>
