@@ -18,9 +18,12 @@ const Register = (props) =>{
           console.log(res)
           message.success(`Hi ${res.data.name}! You can login now`)
           Modal.info({
-            title: 'Please save your private key',
+            title: 'Please save your private information',
             content: (
               <div>
+                <strong>Your address:</strong>
+                <p>{res.data.address}</p>
+                <strong>Your private key:</strong>
                 <p>{res.data.privateKey}</p>
               </div>
             ),
