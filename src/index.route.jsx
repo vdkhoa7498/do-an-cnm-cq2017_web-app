@@ -15,11 +15,11 @@ function RouteLayout(props) {
   const { children } = props;
 
   return (
-    <Layout className="private-layout-container">
+    <Layout style={{ padding: 10}}>
       <Header className="header">
         <HeaderBar />
       </Header>
-      <Content style={{ padding: "0 24px", minHeight: 380 }}>
+      <Content style={{ marginTop: 15, minHeight: 380 }}>
         {children}
       </Content>
       <Footer style={{ textAlign: "center" }}>Website Charity @2021</Footer>

@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import Logo from '../../assets/img/logo_128.png';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined, UserAddOutlined } from '@ant-design/icons';
 import './styles.scss';
@@ -28,8 +29,7 @@ const Register = (props) =>{
                 (!isSuccess) ? (
                     <Form onFinish={onFinish} className="register-form" form={form}>
                         <Link to="/">
-                            <h1>Logo</h1>
-                            {/* <img src={Logo} className="register-form__image" alt="Online Learning" /> */}
+                            <img src={Logo} className="register-form__image" alt="Online Learning" />
                         </Link>
                         <Form.Item
                         name="email"

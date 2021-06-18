@@ -1,6 +1,7 @@
 import { Button, Menu, Dropdown, message, Tooltip } from 'antd'
 import { MoreOutlined } from '@ant-design/icons'
 import { Link, useHistory } from 'react-router-dom'
+import Logo from '../../assets/img/logo_64.png';
 import './styles.scss'
 
 const HeaderBar = (props) =>{
@@ -53,7 +54,7 @@ const HeaderBar = (props) =>{
     console.log('name', name)
     return(
         <div className="header-bar">
-            <Link to="/" className="logo-item">Logo</Link>
+            <Link to="/" className="logo-item"><img src={Logo} alt="Online Learning" /> Charity</Link>
             {
                 (isAuthenticated)
                 ?
