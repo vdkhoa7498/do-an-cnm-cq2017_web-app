@@ -3,6 +3,7 @@ import './styles.scss'
 import { Layout, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 
+import HeaderBar from '../headerBar/HeaderBar'
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
@@ -17,7 +18,8 @@ const LayoutComponent = (props) => {
     const [menuIndex, setMenuIndex] = useState(1)
 
   return (
-    <div>
+    <div style={{padding: 10}}>
+        <HeaderBar/>
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
             <div className="logo" />
@@ -28,7 +30,7 @@ const LayoutComponent = (props) => {
                         <span>Projects</span>
                     </Link>
                 </Menu.Item>
-                <Menu.Item key="2" icon={<SwapOutlined />}>
+                <Menu.Item key="2">
                     <Link to ="/transactions">
                         <SwapOutlined />
                         <span>Transactions</span>
