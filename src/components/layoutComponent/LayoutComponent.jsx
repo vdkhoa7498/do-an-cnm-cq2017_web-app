@@ -18,7 +18,7 @@ const LayoutComponent = (props) => {
     const [menuIndex, setMenuIndex] = useState(1)
 
   return (
-    <div style={{padding: 10}}>
+    <div>
         <HeaderBar/>
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
