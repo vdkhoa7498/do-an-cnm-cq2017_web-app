@@ -1,36 +1,38 @@
 import React, {useState} from 'react'
 import './styles.scss'
 import { Layout, Menu } from 'antd';
-
-import Project from './components/Project'
+import { Link } from 'react-router-dom';
 
 import {
     MenuUnfoldOutlined,
     MenuFoldOutlined,
     ProjectOutlined,
-    VideoCameraOutlined,
-    UploadOutlined,
+    SwapOutlined,
   } from '@ant-design/icons';
   
 const { Header, Sider, Content } = Layout;
 
-const Home = () => {
-    const [collapsed, setCollapsed] = useState(false)
+const LayoutComponent = (props) => {
+    const [collapsed, setCollapsed] = useState(false);
+    const [menuIndex, setMenuIndex] = useState(1)
 
   return (
     <div>
         <Layout>
             <Sider trigger={null} collapsible collapsed={collapsed}>
             <div className="logo" />
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
-                <Menu.Item key="1" icon={<ProjectOutlined />}>
-                Projects
+            <Menu theme="dark" mode="inline" onClick={(value)=>{ setMenuIndex(value.key); console.log(menuIndex)}} defaultSelectedKeys={['1']}>
+                <Menu.Item key="1">
+                    <Link to ="/projects">
+                        <ProjectOutlined />
+                        <span>Projects</span>
+                    </Link>
                 </Menu.Item>
-                <Menu.Item key="2" icon={<VideoCameraOutlined />}>
-                nav 2
-                </Menu.Item>
-                <Menu.Item key="3" icon={<UploadOutlined />}>
-                nav 3
+                <Menu.Item key="2" icon={<SwapOutlined />}>
+                    <Link to ="/transactions">
+                        <SwapOutlined />
+                        <span>Transactions</span>
+                    </Link>
                 </Menu.Item>
             </Menu>
             </Sider>
@@ -46,10 +48,10 @@ const Home = () => {
                 style={{
                 margin: '24px 16px',
                 padding: 24,
-                minHeight: 280,
+                minHeight: 500,
                 }}
             >
-                <Project/>
+                {props.children}
             </Content>
             </Layout>
         </Layout>
@@ -58,4 +60,4 @@ const Home = () => {
   );
 };
 
-export default Home
+export default LayoutComponent
