@@ -1,5 +1,5 @@
 import { Button, Menu, Dropdown, message, Tooltip } from 'antd'
-import { MoreOutlined } from '@ant-design/icons'
+import { MoreOutlined, LogoutOutlined } from '@ant-design/icons'
 import { Link, useHistory } from 'react-router-dom'
 import Logo from '../../assets/img/logo_64.png';
 import './styles.scss'
@@ -60,7 +60,7 @@ const HeaderBar = (props) =>{
                 ?
                 <div className="right-header-container">
                     {
-                    (!props.user)
+                    (!name)
                     ? null
                     :<Link to="/profile" className="profile-container">
                         {/* <div className="avatar">
@@ -70,14 +70,20 @@ const HeaderBar = (props) =>{
                             : <img alt="Avatar" src={props.user.picture}></img>
                         }
                         </div> */}
-                        <Tooltip title={`${props.user.fullName}`} color="#00152a" >
+                        <Tooltip title={`${name}`} color="#00152a" >
                             <div className="name" style={{color: "white"}}>
                                 {name}
                             </div>
                         </Tooltip>
                     </Link>
                     }
-                    <DropdownMenu className="dropdown-menu" />
+                    {/* <DropdownMenu className="dropdown-menu" /> */}
+                    <Tooltip title="Logout">
+                        <Button onClick={onLogout} type="text" style={{color: "white"}}>
+                            <LogoutOutlined />
+                            Logout
+                        </Button>
+                    </Tooltip>
                     
                 </div>
                 :

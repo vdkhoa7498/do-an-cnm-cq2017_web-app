@@ -93,7 +93,7 @@ const Register = (props) =>{
           <div style={{color: 'red', marginBottom: 15}}>{props.message}</div>
           <Form.Item>
             <Button type="primary" htmlType="submit" className="register-form-button" icon={<UserAddOutlined/>}>
-              Đăng kí
+              Register
             </Button>
           </Form.Item>
         </Form>

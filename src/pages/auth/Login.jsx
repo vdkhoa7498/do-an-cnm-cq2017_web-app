@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import Logo from '../../assets/img/logo_128.png';
 import { Form, Input, Button, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined } from '@ant-design/icons';
 import './styles.scss';
 import { Link, useHistory } from 'react-router-dom'
 import { loginService } from '../../services/user.service';
@@ -48,7 +48,7 @@ const Login = (props) =>{
                     <Input 
                         autoComplete="publicKey"
                         prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-                        placeholder="publicKey"
+                        placeholder="Address"
                     />
                 </Form.Item>
 
@@ -63,7 +63,7 @@ const Login = (props) =>{
                 >
                     <Input 
                         prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-                        placeholder="privateKey"
+                        placeholder="Private Key"
                     />
                 </Form.Item>
 
