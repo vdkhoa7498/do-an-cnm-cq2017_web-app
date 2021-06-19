@@ -1,5 +1,5 @@
-import { Button, Menu, Dropdown, message, Tooltip } from 'antd'
-import { MoreOutlined, LogoutOutlined } from '@ant-design/icons'
+import { Button, Tooltip } from 'antd'
+import { LogoutOutlined } from '@ant-design/icons'
 import { Link, useHistory } from 'react-router-dom'
 import Logo from '../../assets/img/logo_64.png';
 import './styles.scss'
@@ -12,46 +12,45 @@ const HeaderBar = (props) =>{
         history.go(0);
     }
 
-    const menu = (
-        <Menu>
-            <Menu.Item key="1">
-                <Link to="/profile">
-                <Button type="text">
-                    Profile
-                </Button>
-                </Link>
-            </Menu.Item>
-            <Menu.Item key="3">
-                <Button onClick={onLogout} type="text">
-                Logout
-                </Button>
-            </Menu.Item>
-        </Menu>
-    );
+    // const menu = (
+    //     <Menu>
+    //         <Menu.Item key="1">
+    //             <Link to="/profile">
+    //             <Button type="text">
+    //                 Profile
+    //             </Button>
+    //             </Link>
+    //         </Menu.Item>
+    //         <Menu.Item key="3">
+    //             <Button onClick={onLogout} type="text">
+    //             Logout
+    //             </Button>
+    //         </Menu.Item>
+    //     </Menu>
+    // );
     
-    const DropdownMenu = () => (
-        <Dropdown key="more" overlay={menu}>
-        <Button
-            style={{
-            border: 'none',
-            backgroundColor: '#00152a',
-            padding: 0,
-            }}
-        >
-            <MoreOutlined
-            style={{
-                fontSize: 20,
-                verticalAlign: 'top',
-                backgroundColor: '#00152a',
-                color: 'white'
-            }}
-            />
-        </Button>
-        </Dropdown>
-    );
+    // const DropdownMenu = () => (
+    //     <Dropdown key="more" overlay={menu}>
+    //     <Button
+    //         style={{
+    //         border: 'none',
+    //         backgroundColor: '#00152a',
+    //         padding: 0,
+    //         }}
+    //     >
+    //         <MoreOutlined
+    //         style={{
+    //             fontSize: 20,
+    //             verticalAlign: 'top',
+    //             backgroundColor: '#00152a',
+    //             color: 'white'
+    //         }}
+    //         />
+    //     </Button>
+    //     </Dropdown>
+    // );
     const isAuthenticated = localStorage.getItem("isAuthenticated");
     const name = localStorage.getItem('name')
-    console.log('name', name)
     return(
         <div className="header-bar">
             <Link to="/" className="logo-item"><img src={Logo} alt="Online Learning" /> Charity</Link>
