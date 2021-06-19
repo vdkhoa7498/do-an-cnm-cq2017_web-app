@@ -12,7 +12,6 @@ const Login = (props) =>{
     const onFinish = (values) =>{
         loginService(values)
         .then((res) =>{
-            console.log(res)
             if (res.data.name) {
                 localStorage.setItem('name', res.data.name);
                 localStorage.setItem('address', res.data.address);

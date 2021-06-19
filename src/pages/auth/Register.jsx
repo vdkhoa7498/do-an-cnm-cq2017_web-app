@@ -1,9 +1,9 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import Logo from '../../assets/img/logo_128.png';
 import { Form, Input, Button, message, Modal } from 'antd';
-import { UserOutlined, LockOutlined, UserAddOutlined } from '@ant-design/icons';
+import { UserOutlined, UserAddOutlined } from '@ant-design/icons';
 import './styles.scss';
-import { Redirect, Link, useHistory } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { registerService } from '../../services/user.service';
 
 const Register = (props) =>{
@@ -12,7 +12,6 @@ const Register = (props) =>{
     const history = useHistory();
 
     const onFinish = (values) => {
-        console.log(values)
         registerService(values)
         .then((res) =>{
           console.log(res)
