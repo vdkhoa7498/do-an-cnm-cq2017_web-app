@@ -61,7 +61,7 @@ const HeaderBar = (props) =>{
                     {
                     (!name)
                     ? null
-                    :<Link to="/profile" className="profile-container">
+                    :<div to="/profile" className="profile-container">
                         {/* <div className="avatar">
                         {
                             (!props.user.picture)
@@ -74,7 +74,7 @@ const HeaderBar = (props) =>{
                                 {name}
                             </div>
                         </Tooltip>
-                    </Link>
+                    </div>
                     }
                     {/* <DropdownMenu className="dropdown-menu" /> */}
                     <Tooltip title="Logout">
