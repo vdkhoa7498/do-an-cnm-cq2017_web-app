@@ -3,14 +3,13 @@ import { Table, Tag, Divider, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import './styles.scss'
-import { createNewProjectService, getProjectsService } from '../../services/project.service';
+import { getProjectsService } from '../../services/project.service';
 
 const columns = [
   {
     title: 'Project Name',
     dataIndex: 'projectName',
     key: 'projectName',
-    // render: text => <a>{text}</a>,
   },
   {
     title: 'Description',
@@ -20,10 +19,9 @@ const columns = [
   {
       title: 'Start Date',
       dataIndex: 'projectCreateTimestamp',
-      key: 'projectDeadline',
-      render: deadline => {
-          const date_ob = new Date(parseInt(deadline))
-          console.log(date_ob)
+      key: 'projectCreateTimestamp',
+      render: projectCreateTimestamp => {
+          const date_ob = new Date(parseInt(projectCreateTimestamp))
           const year = date_ob.getFullYear();
           const month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
           const date = ("0" + date_ob.getDate()).slice(-2);
@@ -35,9 +33,10 @@ const columns = [
     title: 'End Date',
     dataIndex: 'projectDeadline',
     key: 'projectDeadline',
-    render: deadline => {
-        const date_ob = new Date(parseInt(deadline))
-        console.log(date_ob)
+    render: projectDeadline => {
+        const deadlineTimestamp = parseInt(projectDeadline);
+        const date_ob = new Date(deadlineTimestamp);
+        
         const year = date_ob.getFullYear();
         const month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
         const date = ("0" + date_ob.getDate()).slice(-2);
@@ -69,7 +68,8 @@ const Project = () => {
   useEffect(()=>{
     getProjectsService()  
     .then((res)=>{
-      setProjectList(res.data)
+      setProjectList(res.data);
+      console.log(res.data)
     })
     .catch(err => console.log(err))
   },[])

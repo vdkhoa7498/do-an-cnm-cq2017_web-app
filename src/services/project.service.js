@@ -9,3 +9,13 @@ export function createNewProjectService(form) {
         ...form
     });
 }
+
+export function getDonateProjectsService() {
+    return axios.get("/donate-projects");
+}
+
+export function donateProjectService(form) {
+    return axios.post("/donate-projects", {
+        ...form
+    });
+}

@@ -1,7 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Form, Divider, Input, Button, DatePicker } from 'antd';
-// import { PlusOutlined } from '@ant-design/icons'
-import { useParams } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import './styles.scss'
 import { createNewProjectService } from '../../services/project.service';
 
@@ -22,14 +21,18 @@ const tailLayout = {
 
 const CreateProject = () => {
     const [form] = Form.useForm();
+    const address = localStorage.getItem('address');
+    const history = useHistory();
 
-    const onFinish = (values) => {
+    const onFinish = async(values) => {
         const data = values;
-        data.projectDeadline = values.projectDeadline.format("X");
-        console.log(data)
-        createNewProjectService(data)
-        .then((res)=> console.log(res))
-        .catch(err => console.log(err))
+        data.projectDeadline = new Date(values.projectDeadline.format("x"));
+        console.log(data.projectDeadline)
+        // await createNewProjectService(data)
+        // .then((res)=> {
+        //     history.push("/projects");
+        // })
+        // .catch(err => console.log(err))
     };
     
     const onReset = () => {
@@ -40,13 +43,14 @@ const CreateProject = () => {
         <div style={{ textAlign: "left"}}>
             <h1>Create New Project</h1>
             <Divider/>
-            <Form {...layout} form={form} name="control-hooks" onFinish={onFinish}>
+            <Form {...layout} form={form} onFinish={onFinish}>
                 <Form.Item
                     name="projectName"
                     label="Project Name"
                     rules={[
                     {
                         required: true,
+                        message: 'Please input your Project name',
                     },
                     ]}
                 >
@@ -58,6 +62,7 @@ const CreateProject = () => {
                     rules={[
                     {
                         required: true,
+                        message: 'Please input your Project description',
                     },
                     ]}
                 >
@@ -66,10 +71,11 @@ const CreateProject = () => {
                 <Form.Item
                     name="projectBeneficiaryCreateAddress"
                     label="Beneficiary Address"
+                    initialValue= {address}
                     rules={[
                     {
                         required: true,
-                        defaultField: localStorage.getItem('address')
+                        message: 'Please input your Project beneficiary address',
                     },
                     ]}
                 >
@@ -81,6 +87,7 @@ const CreateProject = () => {
                     rules={[
                     {
                         required: true,
+                        message: 'Please input your Project deadline',
                     },
                     ]}
                 >

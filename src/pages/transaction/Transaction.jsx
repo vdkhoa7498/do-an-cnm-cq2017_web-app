@@ -1,4 +1,4 @@
-import { Table, Tag, Layout, Menu } from 'antd';
+import { Table, Tag } from 'antd';
 
 const columns = [
     {
