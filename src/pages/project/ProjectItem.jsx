@@ -1,143 +1,211 @@
-import React, {useState} from 'react';
-import { Divider, Form, Input, Row, Col, Button, Modal, message } from 'antd';
-import { WalletOutlined } from '@ant-design/icons'
-import { useParams } from 'react-router-dom';
-import './styles.scss'
-import { donateProjectService } from '../../services/project.service';
+import React, { useState, useEffect } from "react";
+import { Divider, Form, Input, Row, Col, Button, Modal, message } from "antd";
+import { WalletOutlined } from "@ant-design/icons";
+import { useParams } from "react-router-dom";
+import "./styles.scss";
+import {
+  donateProjectService,
+  getProjectByIdService,
+} from "../../services/project.service";
 
 const { TextArea } = Input;
 
-const data = 
-    {
-      "projectId": 0,
-      "projectName": "Ung ho nguoi tan tat5",
-      "projectBeneficiaryCreateAddress": "04c5f5d991997ea260a52b9af3d0798056614082e2ad00a1f2797b51438ea6afc30c9a47e0eeb69cf13e6d9c81700f489f01c72423920ca71d34c429b4cd6b6b12",
-      "projectOrganizationConfirmAddress": null,
-      "projectDescription": "ung ho nguoi tan tat kho khan, vo gia cu",
-      "projectCreateTimestamp": 1624028149403,
-      "projectConfirmTimestamp": null,
-      "projectDeadline": 1623870000000
-    }
-
 const layout = {
-        labelCol: {
-            span: 8,
-        },
-        wrapperCol: {
-            span: 16,
-        },
-    };
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 16,
+  },
+};
 
 const ProjectItem = () => {
-    const id = useParams().id;
-    const address = localStorage.getItem("address");
-    const [form] = Form.useForm();
-    const [project, setProject] = useState(data)
-    const [isModalVisible, setIsModalVisible] = useState(false);
+  const id = useParams().id;
+  const address = localStorage.getItem("address");
+  const [form] = Form.useForm();
+  const [project, setProject] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-    const donate = (values) => {
-        const data = {
-            projectId: id,
-            fromAddress: address,
-            ...values,
-        }
-        donateProjectService(data)
-        .then(res=>{
-            console.log(res)
-            message.success("")
-        })
-        .catch(err=>console.log(err))
-
-        setIsModalVisible(false);
+  const donate = (values) => {
+    const data = {
+      projectId: id,
+      fromAddress: address,
+      ...values,
     };
+    console.log(data);
+    donateProjectService(data)
+      .then((res) => {
+        if (res.status === 204) {
+          message.error("Donation failed! Wrong private key!");
+          form.resetFields();
+        }
+        if (res.status === 201) {
+          message.success(`You donated ${data.amount} to the project`);
+          form.resetFields();
+        }
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
 
-    return(
-        <div style={{ textAlign: "left" }}>
-            <Modal 
-                title="Donate" 
-                footer={[
-                    <Button form="myForm" type="primary" htmlType="submit">
-                        Donate 
-                    </Button>,
-                    <Button onClick={()=>{form.resetFields(); setIsModalVisible(false);}}>
-                        Cancel 
-                    </Button>
-                ]} 
-                visible={isModalVisible} 
-            >
-                <Form
-                    {...layout}
-                    form={form}
-                    id="myForm"
-                    onFinish={donate}
-                    >
-                    <Form.Item
-                        label="Amount Donated"
-                        name="amount"
-                        rules={[
-                        {
-                            required: true,
-                            message: 'Please input your Amount donated!',
-                        },
-                        ]}
-                    >
-                        <Input />
-                    </Form.Item>
+    setIsModalVisible(false);
+  };
 
-                    <Form.Item
-                        label="Private Key"
-                        name="privateKey"
-                        rules={[
-                        {
-                            required: true,
-                            message: 'Please input your Private key!',
-                        },
-                        ]}
-                    >
-                        <TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
-                    </Form.Item>
-                </Form>
-            </Modal>
-            <div style={{display: "flex", justifyContent: "space-between", alignItems: "center"}}>
-                <h1>Project Information</h1>
-                <Button type="primary" onClick={()=>{setIsModalVisible(true)}}  style={{marginRight: 20, width: 120}} ><WalletOutlined /> Donate</Button>
-            </div>
-            <Divider/>
-            <Row style={{margin: 5}}>
-                <Col span={4} style={{textAlign: "right", marginRight: 15}}>
-                    <span className="label"> Project Name </span>
-                </Col>
-                <Col span={12}>
-                    <Input value={project.projectName} />
-                </Col>
-            </Row>
-            <Row style={{margin: 5}}>
-                <Col span={4} style={{textAlign: "right", marginRight: 15}}>
-                    <span className="label"> Project Description </span>
-                </Col>
-                <Col span={12}>
-                    <TextArea autoSize={{ minRows: 2, maxRows: 6 }} value={project.projectDescription} />
-                </Col>
-            </Row>
-            <Row style={{margin: 5}}>
-                <Col span={4} style={{textAlign: "right", marginRight: 15}}>
-                    <span className="label"> Beneficiary Address: </span>
-                </Col>
-                <Col span={12}>
-                    <TextArea autoSize={{ minRows: 2, maxRows: 6 }} value={project.projectBeneficiaryCreateAddress} />
-                </Col>
-            </Row>
-            <Row style={{margin: 5}}>
-                <Col span={4} style={{textAlign: "right", marginRight: 15}}>
-                    <span className="label"> Project Description: </span>
-                </Col>
-                <Col span={12}>
-                    <Input value={project.projectBeneficiaryCreateAddress} />
-                </Col>
-            </Row>
+  const convertTime = (time) => {
+    const date_ob = new Date(parseInt(time));
+    const year = date_ob.getFullYear();
+    const month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+    const date = ("0" + date_ob.getDate()).slice(-2);
+    return (
+      <span>
+        {year}/{month}/{date}
+      </span>
+    );
+  };
 
-        </div>
-    )
-}
+  useEffect(() => {
+    getProjectByIdService(id)
+      .then((res) => {
+        setProject(res.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
-export default ProjectItem
+  return (
+    <div style={{ textAlign: "left" }}>
+      <Modal
+        title="Donate"
+        footer={[
+          <Button form="myForm" type="primary" htmlType="submit">
+            Donate
+          </Button>,
+          <Button
+            onClick={() => {
+              form.resetFields();
+              setIsModalVisible(false);
+            }}
+          >
+            Cancel
+          </Button>,
+        ]}
+        visible={isModalVisible}
+      >
+        <Form {...layout} form={form} id="myForm" onFinish={donate}>
+          <Form.Item
+            key={0}
+            label="Amount Donated"
+            name="amount"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Amount donated!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item
+            key={-1}
+            label="Private Key"
+            name="privateKey"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Private key!",
+              },
+            ]}
+          >
+            <TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <h1>Project Information</h1>
+        <Button
+          type="primary"
+          onClick={() => {
+            setIsModalVisible(true);
+          }}
+          style={{ marginRight: 20, width: 120 }}
+        >
+          <WalletOutlined /> Donate
+        </Button>
+      </div>
+      <Divider />
+      {!project ? null : (
+        <Row style={{ width: "100%" }}>
+          <Row key={1} style={{ width: "100%" }}>
+            <Col span={4}>
+              <strong style={{ float: "right" }}>Project Name</strong>
+            </Col>
+            <Col span={19} offset={1}>
+              <div>{project.project_name}</div>
+            </Col>
+          </Row>
+          <Row key={2} style={{ width: "100%" }}>
+            <Col span={4}>
+              <strong style={{ float: "right" }}>Project Description</strong>
+            </Col>
+            <Col span={19} offset={1}>
+              <div>{project.project_description}</div>
+            </Col>
+          </Row>
+          <Row key={3} style={{ width: "100%" }}>
+            <Col span={4}>
+              <strong style={{ float: "right" }}>Project Deadline</strong>
+            </Col>
+            <Col span={19} offset={1}>
+              {convertTime(project.project_deadline)}
+            </Col>
+          </Row>
+          <Divider />
+          <Row key={4} style={{ width: "100%" }}>
+            <Col span={4}>
+              <strong style={{ float: "right" }}>
+                Project Beneficiary Create Address
+              </strong>
+            </Col>
+            <Col span={19} offset={1}>
+              <div>{project.project_beneficiary_create_address}</div>
+            </Col>
+          </Row>
+          <Row key={5} style={{ width: "100%" }}>
+            <Col span={4}>
+              <strong style={{ float: "right" }}>Project Created Time</strong>
+            </Col>
+            <Col span={19} offset={1}>
+              {convertTime(project.project_create_timestamp)}
+            </Col>
+          </Row>
+          <Divider />
+          <Row key={6} style={{ width: "100%" }}>
+            <Col span={4}>
+              <strong style={{ float: "right" }}>
+                Project Organization Confirm Address
+              </strong>
+            </Col>
+            <Col span={19} offset={1}>
+              <div>{project.project_organization_confirm_address}</div>
+            </Col>
+          </Row>
+          <Row key={7} style={{ width: "100%" }}>
+            <Col span={4}>
+              <strong style={{ float: "right" }}>Project Confirmed Time</strong>
+            </Col>
+            <Col span={19} offset={1}>
+              {convertTime(project.project_confirm_timestamp)}
+            </Col>
+          </Row>
+        </Row>
+      )}
+    </div>
+  );
+};
+
+export default ProjectItem;
