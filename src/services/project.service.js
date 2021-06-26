@@ -4,6 +4,18 @@ export function getProjectsService() {
     return axios.get("/projects");
 }
 
+export function getProjectByIdService(id) {
+    return axios.get(`/project/${id}`);
+}
+
+export function getUnconfirmedProjectsService() {
+    return axios.get("/unconfirm-projects");
+}
+
+export function getConfirmedProjectsService() {
+    return axios.get("/confirm-projects");
+}
+
 export function createNewProjectService(form) {
     return axios.post("/projects", {
         ...form
