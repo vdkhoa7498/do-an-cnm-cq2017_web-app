@@ -6,7 +6,7 @@ import { createNewProjectService } from '../../services/project.service';
 
 const layout = {
     labelCol: {
-      span: 8,
+      span: 4,
     },
     wrapperCol: {
       span: 16,
@@ -14,10 +14,12 @@ const layout = {
 };
 const tailLayout = {
     wrapperCol: {
-        offset: 8,
+        offset: 4,
         span: 16,
     },
 };
+
+const { TextArea } = Input
 
 const CreateProject = () => {
     const [form] = Form.useForm();
@@ -26,13 +28,14 @@ const CreateProject = () => {
 
     const onFinish = async(values) => {
         const data = values;
+        data.projectBeneficiaryCreateAddress = address
         data.projectDeadline = new Date(values.projectDeadline.format("x"));
         console.log(data.projectDeadline)
-        // await createNewProjectService(data)
-        // .then((res)=> {
-        //     history.push("/projects");
-        // })
-        // .catch(err => console.log(err))
+        await createNewProjectService(data)
+        .then((res)=> {
+            history.push("/projects");
+        })
+        .catch(err => console.log(err))
     };
     
     const onReset = () => {
@@ -66,20 +69,7 @@ const CreateProject = () => {
                     },
                     ]}
                 >
-                    <Input />
-                </Form.Item>
-                <Form.Item
-                    name="projectBeneficiaryCreateAddress"
-                    label="Beneficiary Address"
-                    initialValue= {address}
-                    rules={[
-                    {
-                        required: true,
-                        message: 'Please input your Project beneficiary address',
-                    },
-                    ]}
-                >
-                    <Input />
+                    <TextArea autoSize={{ minRows: 3, maxRows: 6 }} />
                 </Form.Item>
                 <Form.Item
                     name="projectDeadline"

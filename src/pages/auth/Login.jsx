@@ -16,6 +16,7 @@ const Login = (props) =>{
                 localStorage.setItem('name', res.data.name);
                 localStorage.setItem('address', res.data.address);
                 localStorage.setItem('isAuthenticated', true);
+                localStorage.setItem('role', res.data.role);
                 message.success(`Wellcome ${res.data.name}!`)
                 history.push('/');
             }
