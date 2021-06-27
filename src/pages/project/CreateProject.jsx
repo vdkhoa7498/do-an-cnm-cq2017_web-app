@@ -50,7 +50,6 @@ const CreateProject = () => {
 
     return(
         <div style={{ textAlign: "left"}}>
-            <Modal></Modal>
             <h1>Create New Project</h1>
             <Divider/>
             <Form {...layout} form={form} onFinish={onFinish}>

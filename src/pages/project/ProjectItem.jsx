@@ -7,12 +7,46 @@ import {
 } from "@ant-design/icons";
 import { useParams, useHistory } from "react-router-dom";
 import "./styles.scss";
-import { getProjectByIdService } from "../../services/project.service";
+import { confirmedProjectService, getProjectByIdService } from "../../services/project.service";
 
 const ProjectItem = () => {
   const id = useParams().id;
   const address = localStorage.getItem("address");
   const history = useHistory();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [privateKey, setPrivateKey] = useState(false)
+
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = async() => {
+    
+    if (privateKey){
+      const data = {
+        projectId: parseInt(id),
+        projectOrganizationConfirmAddress: address,
+        privateKey: privateKey
+      }
+      console.log(data)
+      await confirmedProjectService(data)
+      .then(res=>{
+        if (res.status === 201){
+          message.success("Project confirm successful!")
+          history.push(`/projects/${id}`)
+          setIsModalVisible(false);
+        }
+        if (res.status === 204){
+          message.error("Project confirm failed! Something is wrong")
+          setIsModalVisible(false);
+        }
+      })
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const [project, setProject] = useState(null);
 
@@ -51,6 +85,10 @@ const ProjectItem = () => {
 
   return (
     <div style={{ textAlign: "left" }}>
+      <Modal title="Basic Modal" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+        <p>Private Key</p>
+        <Input.Password onChange={e => setPrivateKey(e.target.value)}/>
+      </Modal>
       <div
         style={{
           display: "flex",
@@ -79,7 +117,7 @@ const ProjectItem = () => {
               <Button
                 type="primary"
                 style={{ marginRight: 20, width: 120 }}
-                onClick={() => {}}
+                onClick={showModal}
               >
                 <CheckOutlined /> Confirm
               </Button>
