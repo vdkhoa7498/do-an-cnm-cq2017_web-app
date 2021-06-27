@@ -11,3 +11,7 @@ export function sendBackProjectService(form) {
         ...form
     });
 }
+
+export function getAllDontateTransactions() {
+    return axios.get(`donate-transactions`);
+}

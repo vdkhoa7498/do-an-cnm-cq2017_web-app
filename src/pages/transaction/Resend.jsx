@@ -7,14 +7,14 @@ const columns = [
     title: "From address",
     dataIndex: "sendback_txs_from_address",
     key: "sendback_txs_from_address",
-    render: text => {return(<TextArea autoSize={{ minRows: 2, maxRows: 6 }} value={text} />)},
+    render: text => {return(<TextArea style={{border: "none"}} autoSize={{ minRows: 2, maxRows: 6 }} value={text} />)},
   },
   {
     title: "To address",
     dataIndex: "sendback_txs_to_address",
     key: "sendback_txs_to_address",
     render: (text) => {
-      return <TextArea autoSize={{ minRows: 2, maxRows: 6 }} value={text} />;
+      return <TextArea style={{border: "none"}} autoSize={{ minRows: 2, maxRows: 6 }} value={text} />;
     },
   },
   {
