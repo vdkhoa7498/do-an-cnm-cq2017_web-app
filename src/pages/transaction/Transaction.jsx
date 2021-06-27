@@ -1,34 +1,24 @@
-import { Table, Tag } from 'antd';
+import { Table, Divider } from 'antd';
 
 const columns = [
     {
-      title: 'Transaction Name',
+      title: 'From address',
       dataIndex: 'TransactionName',
       key: 'TransactionName',
       // render: text => <a>{text}</a>,
     },
     {
-      title: 'Description',
+      title: 'To address',
       dataIndex: 'TransactionDescription',
       key: 'TransactionDescription',
     },
     {
-      title: 'Address',
+      title: 'Amount',
       dataIndex: 'TransactionBeneficiaryCreateAddress',
       key: 'TransactionBeneficiaryCreateAddress',
     },
     {
-      title: 'Status',
-      key: 'status',
-      dataIndex: 'status',
-      render: status => (
-          <Tag color={status === 'confirmed' ? 'green' : 'volcano'} key={status}>
-              {status.toUpperCase()}
-          </Tag>
-      ),
-    },
-    {
-        title: 'Dealine',
+        title: 'Date',
         dataIndex: 'TransactionDeadline',
         key: 'TransactionDeadline',
         render: deadline => {
@@ -75,9 +65,14 @@ const columns = [
     },
   ];
 
-  const Transaction = () => {
+  const Transaction = (props) => {
+    const {title} = props
       return(
-        <Table columns={columns} dataSource={data} />
+        <div style={{display: "flex", alignItems: "flex-start", flexDirection: "column"}}>
+          <h1>{title}</h1>
+          <Divider/>
+          <Table columns={columns} dataSource={data} style={{width: "100%"}} />
+        </div>
       )
   }
 

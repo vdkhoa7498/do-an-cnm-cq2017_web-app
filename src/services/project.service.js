@@ -12,6 +12,12 @@ export function getUnconfirmedProjectsService() {
     return axios.get("/unconfirm-projects");
 }
 
+export function confirmedProjectService(form) {
+    return axios.post("/unconfirm-projects",{
+        ...form,
+    });
+}
+
 export function getConfirmedProjectsService() {
     return axios.get("/confirm-projects");
 }
