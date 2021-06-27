@@ -10,7 +10,6 @@ import NotFound from "./pages/notFound/NotFound";
 import Register from "./pages/auth/Register";
 import Login from "./pages/auth/Login";
 import LayoutComponent from "./components/layoutComponent/LayoutComponent";
-import Project from "./pages/project/Project";
 import Donate from "./pages/transaction/Donate";
 import ConfirmProjectList from "./pages/project/ConfirmProjectList"
 import UnconfirmProjectList from "./pages/project/UnconfirmProjectList"
@@ -18,9 +17,11 @@ import MyProject from "./pages/myProject/MyProject";
 import ProjectItem from "./pages/project/ProjectItem";
 import CreateProject from "./pages/project/CreateProject";
 import Resend from "./pages/transaction/Resend";
+import DonateProject from './pages/project/components/DonateProject'
+import SendBackProject from './pages/project/components/SendBackProject'
 
 function RouterOutlet(props) {
-  const role = localStorage.getItem("role")
+  const isAuthenticated = localStorage.getItem("isAuthenticated")
   return (
     <Suspense fallback={null}>
       <Router>
@@ -38,6 +39,8 @@ function RouterOutlet(props) {
               "/confirmed-projects",
               "/unconfirmed-projects",
               "/my-projects",
+              "/donate-project/:id",
+              "/sendback-project/:id",
             ]}
           >
             <LayoutComponent>
@@ -50,11 +53,17 @@ function RouterOutlet(props) {
                 </Route>
                 <Route path="/my-projects">
                   {
-                    (role)
+                    (isAuthenticated)
                     ? 
                     <MyProject />
                     : <Redirect to="/confirmed-projects"/>
                   }
+                </Route>
+                <Route path= "/donate-project/:id">
+                  <DonateProject/>
+                </Route>
+                <Route path= "/sendback-project/:id">
+                  <SendBackProject/>
                 </Route>
                 <Route path="/confirmed-projects">
                   <ConfirmProjectList />

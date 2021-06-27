@@ -1,5 +1,5 @@
-import React from 'react';
-import { Form, Divider, Input, Button, DatePicker } from 'antd';
+import React, {useState} from 'react';
+import { Form, Divider, Input, Button, DatePicker, Modal, message } from 'antd';
 import { useHistory } from 'react-router-dom';
 import './styles.scss'
 import { createNewProjectService } from '../../services/project.service';
@@ -29,11 +29,17 @@ const CreateProject = () => {
     const onFinish = async(values) => {
         const data = values;
         data.projectBeneficiaryCreateAddress = address
-        data.projectDeadline = new Date(values.projectDeadline.format("x"));
-        console.log(data.projectDeadline)
+        data.projectDeadline = values.projectDeadline.format('YYYY-MM-DD') + ' 23:59:59';
+        console.log(data)
         await createNewProjectService(data)
         .then((res)=> {
-            history.push("/projects");
+            if (res.status === 204){
+                message.error("Create new project failed! Wrong private key")
+            }
+            if (res.status === 201){
+                message.success("New project is created")
+                history.push("/confirmed-projects");
+            }
         })
         .catch(err => console.log(err))
     };
@@ -44,6 +50,7 @@ const CreateProject = () => {
 
     return(
         <div style={{ textAlign: "left"}}>
+            <Modal></Modal>
             <h1>Create New Project</h1>
             <Divider/>
             <Form {...layout} form={form} onFinish={onFinish}>
@@ -82,6 +89,18 @@ const CreateProject = () => {
                     ]}
                 >
                     <DatePicker />
+                </Form.Item>
+                <Form.Item
+                    name="privateKey"
+                    label="Private Key"
+                    rules={[
+                    {
+                        required: true,
+                        message: 'Please input your Private key',
+                    },
+                    ]}
+                >
+                    <Input.Password />
                 </Form.Item>
                 <Form.Item {...tailLayout}>
                     <Button type="primary" htmlType="submit" style={{margin: 5}}>

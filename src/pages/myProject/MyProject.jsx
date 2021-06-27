@@ -3,7 +3,6 @@ import OrganizationProject from './OrganizationProject'
 
 const MyProject = () => {
     const role = localStorage.getItem('role')
-    console.log(role)
     return(
         <div>
             {

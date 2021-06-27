@@ -1,58 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { Divider, Form, Input, Row, Col, Button, Modal, message } from "antd";
-import { WalletOutlined, CheckOutlined } from "@ant-design/icons";
-import { useParams } from "react-router-dom";
-import "./styles.scss";
 import {
-  donateProjectService,
-  getProjectByIdService,
-} from "../../services/project.service";
-
-const { TextArea } = Input;
-
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
+  WalletOutlined,
+  CheckOutlined,
+  RetweetOutlined,
+} from "@ant-design/icons";
+import { useParams, useHistory } from "react-router-dom";
+import "./styles.scss";
+import { getProjectByIdService } from "../../services/project.service";
 
 const ProjectItem = () => {
   const id = useParams().id;
   const address = localStorage.getItem("address");
-  const [form] = Form.useForm();
-  const [confrimForm] = Form.useForm();
+  const history = useHistory();
+
   const [project, setProject] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
 
   const [isOrganization, setIsOrganization] = useState(false);
   const [isConfirmedProject, setIsConfirmedProject] = useState(false);
-
-  const donate = (values) => {
-    const data = {
-      projectId: id,
-      fromAddress: address,
-      ...values,
-    };
-    donateProjectService(data)
-      .then((res) => {
-        if (res.status === 204) {
-          message.error("Donation failed! Wrong private key!");
-          form.resetFields();
-        }
-        if (res.status === 201) {
-          message.success(`You donated ${data.amount} to the project`);
-          form.resetFields();
-        }
-        console.log(res);
-      })
-      .catch((err) => console.log(err));
-
-    setIsModalVisible(false);
-  };
 
   const convertTime = (time) => {
     const date_ob = new Date(time);
@@ -70,7 +35,7 @@ const ProjectItem = () => {
     getProjectByIdService(id)
       .then((res) => {
         setProject(res.data);
-        console.log(res.data)
+        console.log(res.data);
         if (res.data.project_organization_confirm_address) {
           setIsConfirmedProject(true);
         } else {
@@ -84,106 +49,8 @@ const ProjectItem = () => {
     }
   }, []);
 
-  const DonateModal = () => {
-    return (
-      <Modal
-        title="Donate"
-        footer={[
-          <Button key={"donate"} form="myForm" type="primary" htmlType="submit">
-            Donate
-          </Button>,
-          <Button
-            key={"cancel"}
-            onClick={() => {
-              form.resetFields();
-              setIsModalVisible(false);
-            }}
-          >
-            Cancel
-          </Button>,
-        ]}
-        visible={isModalVisible}
-      >
-        <Form {...layout} form={form} id="myForm" onFinish={donate}>
-          <Form.Item
-            key={0}
-            label="Amount Donated"
-            name="amount"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Amount donated!",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            key={-1}
-            label="Private Key"
-            name="privateKey"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Private key!",
-              },
-            ]}
-          >
-            <TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
-          </Form.Item>
-        </Form>
-      </Modal>
-    );
-  };
-
-  const ConfirmProjectModal = () => {
-    return (
-      <Modal
-        title="Confirm project"
-        footer={[
-          <Button key={"confirm"} form="myForm" type="primary" htmlType="submit">
-            Confirm
-          </Button>,
-          <Button
-            key={"c_cancel"}
-            onClick={() => {
-              confrimForm.resetFields();
-              setIsConfirmModalVisible(false);
-            }}
-          >
-            Cancel
-          </Button>,
-        ]}
-        visible={isConfirmModalVisible}
-      >
-        <Form {...layout} form={confrimForm} id="myForm" onFinish={donate}>
-          <Form.Item key={0} label="Project Name">
-            {project ? <div>{project.project_name}</div> : null}
-          </Form.Item>
-
-          <Form.Item
-            key={-1}
-            label="Private Key"
-            name="privateKey"
-            rules={[
-              {
-                required: true,
-                message: "Please input your Private key!",
-              },
-            ]}
-          >
-            <TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
-          </Form.Item>
-        </Form>
-      </Modal>
-    );
-  };
-
   return (
     <div style={{ textAlign: "left" }}>
-      <DonateModal />
-      <ConfirmProjectModal />
       <div
         style={{
           display: "flex",
@@ -194,28 +61,44 @@ const ProjectItem = () => {
         <h1>Project Information</h1>
         {isOrganization ? (
           <div>
-            {isConfirmedProject ? null : (
+            {isConfirmedProject ? (
+              <div>
+                {project.project_organization_confirm_address === address ? (
+                  <Button
+                    type="primary"
+                    style={{ marginRight: 20, width: 120 }}
+                    onClick={() => {
+                      history.push(`/sendback-project/${id}`);
+                    }}
+                  >
+                    <RetweetOutlined /> Send Back
+                  </Button>
+                ) : null}
+              </div>
+            ) : (
               <Button
                 type="primary"
                 style={{ marginRight: 20, width: 120 }}
-                onClick={() => {
-                  setIsConfirmModalVisible(true);
-                }}
+                onClick={() => {}}
               >
                 <CheckOutlined /> Confirm
               </Button>
             )}
           </div>
         ) : (
-          <Button
-            type="primary"
-            onClick={() => {
-              setIsModalVisible(true);
-            }}
-            style={{ marginRight: 20, width: 120 }}
-          >
-            <WalletOutlined /> Donate
-          </Button>
+          <div>
+            {!isConfirmedProject ? null : (
+              <Button
+                type="primary"
+                onClick={() => {
+                  history.push(`/donate-project/${id}`);
+                }}
+                style={{ marginRight: 20, width: 120 }}
+              >
+                <WalletOutlined /> Donate
+              </Button>
+            )}
+          </div>
         )}
       </div>
       <Divider />
@@ -266,7 +149,7 @@ const ProjectItem = () => {
           </Row>
           <Divider />
           {isConfirmedProject ? (
-            <div>
+            <div style={{ width: "100%" }}>
               <Row key={6} style={{ width: "100%" }}>
                 <Col span={4}>
                   <strong style={{ float: "right" }}>

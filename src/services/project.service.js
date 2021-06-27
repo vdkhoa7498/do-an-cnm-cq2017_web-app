@@ -8,6 +8,14 @@ export function getProjectByIdService(id) {
     return axios.get(`/project/${id}`);
 }
 
+export function getMyConfirmedProjectsService(id) {
+    return axios.get(`/confirmedProject/${id}`);
+}
+
+export function getMyCreatedProjectsService(id) {
+    return axios.get(`/createdProject/${id}`);
+}
+
 export function getUnconfirmedProjectsService() {
     return axios.get("/unconfirm-projects");
 }
@@ -32,8 +40,3 @@ export function getDonateProjectsService() {
     return axios.get("/donate-projects");
 }
 
-export function donateProjectService(form) {
-    return axios.post("/donate-projects", {
-        ...form
-    });
-}
