@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Divider, Form, Input, Row, Col, Button, Modal, message } from "antd";
-import { WalletOutlined } from "@ant-design/icons";
+import { WalletOutlined, CheckOutlined } from "@ant-design/icons";
 import { useParams } from "react-router-dom";
 import "./styles.scss";
 import {
@@ -23,8 +23,13 @@ const ProjectItem = () => {
   const id = useParams().id;
   const address = localStorage.getItem("address");
   const [form] = Form.useForm();
+  const [confrimForm] = Form.useForm();
   const [project, setProject] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+
+  const [isOrganization, setIsOrganization] = useState(false);
+  const [isConfirmedProject, setIsConfirmedProject] = useState(false);
 
   const donate = (values) => {
     const data = {
@@ -32,7 +37,6 @@ const ProjectItem = () => {
       fromAddress: address,
       ...values,
     };
-    console.log(data);
     donateProjectService(data)
       .then((res) => {
         if (res.status === 204) {
@@ -51,7 +55,7 @@ const ProjectItem = () => {
   };
 
   const convertTime = (time) => {
-    const date_ob = new Date(parseInt(time));
+    const date_ob = new Date(time);
     const year = date_ob.getFullYear();
     const month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
     const date = ("0" + date_ob.getDate()).slice(-2);
@@ -66,19 +70,30 @@ const ProjectItem = () => {
     getProjectByIdService(id)
       .then((res) => {
         setProject(res.data);
+        console.log(res.data)
+        if (res.data.project_organization_confirm_address) {
+          setIsConfirmedProject(true);
+        } else {
+          setIsConfirmedProject(false);
+        }
       })
       .catch((err) => console.log(err));
+
+    if (localStorage.getItem("role") === "organization") {
+      setIsOrganization(true);
+    }
   }, []);
 
-  return (
-    <div style={{ textAlign: "left" }}>
+  const DonateModal = () => {
+    return (
       <Modal
         title="Donate"
         footer={[
-          <Button form="myForm" type="primary" htmlType="submit">
+          <Button key={"donate"} form="myForm" type="primary" htmlType="submit">
             Donate
           </Button>,
           <Button
+            key={"cancel"}
             onClick={() => {
               form.resetFields();
               setIsModalVisible(false);
@@ -119,6 +134,56 @@ const ProjectItem = () => {
           </Form.Item>
         </Form>
       </Modal>
+    );
+  };
+
+  const ConfirmProjectModal = () => {
+    return (
+      <Modal
+        title="Confirm project"
+        footer={[
+          <Button key={"confirm"} form="myForm" type="primary" htmlType="submit">
+            Confirm
+          </Button>,
+          <Button
+            key={"c_cancel"}
+            onClick={() => {
+              confrimForm.resetFields();
+              setIsConfirmModalVisible(false);
+            }}
+          >
+            Cancel
+          </Button>,
+        ]}
+        visible={isConfirmModalVisible}
+      >
+        <Form {...layout} form={confrimForm} id="myForm" onFinish={donate}>
+          <Form.Item key={0} label="Project Name">
+            {project ? <div>{project.project_name}</div> : null}
+          </Form.Item>
+
+          <Form.Item
+            key={-1}
+            label="Private Key"
+            name="privateKey"
+            rules={[
+              {
+                required: true,
+                message: "Please input your Private key!",
+              },
+            ]}
+          >
+            <TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
+          </Form.Item>
+        </Form>
+      </Modal>
+    );
+  };
+
+  return (
+    <div style={{ textAlign: "left" }}>
+      <DonateModal />
+      <ConfirmProjectModal />
       <div
         style={{
           display: "flex",
@@ -127,15 +192,31 @@ const ProjectItem = () => {
         }}
       >
         <h1>Project Information</h1>
-        <Button
-          type="primary"
-          onClick={() => {
-            setIsModalVisible(true);
-          }}
-          style={{ marginRight: 20, width: 120 }}
-        >
-          <WalletOutlined /> Donate
-        </Button>
+        {isOrganization ? (
+          <div>
+            {isConfirmedProject ? null : (
+              <Button
+                type="primary"
+                style={{ marginRight: 20, width: 120 }}
+                onClick={() => {
+                  setIsConfirmModalVisible(true);
+                }}
+              >
+                <CheckOutlined /> Confirm
+              </Button>
+            )}
+          </div>
+        ) : (
+          <Button
+            type="primary"
+            onClick={() => {
+              setIsModalVisible(true);
+            }}
+            style={{ marginRight: 20, width: 120 }}
+          >
+            <WalletOutlined /> Donate
+          </Button>
+        )}
       </div>
       <Divider />
       {!project ? null : (
@@ -184,24 +265,30 @@ const ProjectItem = () => {
             </Col>
           </Row>
           <Divider />
-          <Row key={6} style={{ width: "100%" }}>
-            <Col span={4}>
-              <strong style={{ float: "right" }}>
-                Project Organization Confirm Address
-              </strong>
-            </Col>
-            <Col span={19} offset={1}>
-              <div>{project.project_organization_confirm_address}</div>
-            </Col>
-          </Row>
-          <Row key={7} style={{ width: "100%" }}>
-            <Col span={4}>
-              <strong style={{ float: "right" }}>Project Confirmed Time</strong>
-            </Col>
-            <Col span={19} offset={1}>
-              {convertTime(project.project_confirm_timestamp)}
-            </Col>
-          </Row>
+          {isConfirmedProject ? (
+            <div>
+              <Row key={6} style={{ width: "100%" }}>
+                <Col span={4}>
+                  <strong style={{ float: "right" }}>
+                    Project Organization Confirm Address
+                  </strong>
+                </Col>
+                <Col span={19} offset={1}>
+                  <div>{project.project_organization_confirm_address}</div>
+                </Col>
+              </Row>
+              <Row key={7} style={{ width: "100%" }}>
+                <Col span={4}>
+                  <strong style={{ float: "right" }}>
+                    Project Confirmed Time
+                  </strong>
+                </Col>
+                <Col span={19} offset={1}>
+                  {convertTime(project.project_confirm_timestamp)}
+                </Col>
+              </Row>
+            </div>
+          ) : null}
         </Row>
       )}
     </div>
