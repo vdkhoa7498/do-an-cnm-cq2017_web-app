@@ -14,29 +14,30 @@ import Project from "./pages/project/Project";
 import Donate from "./pages/transaction/Donate";
 import ConfirmProjectList from "./pages/project/ConfirmProjectList"
 import UnconfirmProjectList from "./pages/project/UnconfirmProjectList"
-
+import MyProject from "./pages/myProject/MyProject";
 import ProjectItem from "./pages/project/ProjectItem";
 import CreateProject from "./pages/project/CreateProject";
 import Resend from "./pages/transaction/Resend";
 
 function RouterOutlet(props) {
+  const role = localStorage.getItem("role")
   return (
     <Suspense fallback={null}>
       <Router>
         <Switch>
           <Route exact path="/">
-            <Redirect to="/projects" />
+            <Redirect to="/confirmed-projects" />
           </Route>
           <Route
             exact
             path={[
-              "/projects",
               "/projects/:id",
               "/create-new-project",
               "/donate-transactions",
               "/resend-transactions",
               "/confirmed-projects",
-              "/unconfirmed-projects"
+              "/unconfirmed-projects",
+              "/my-projects",
             ]}
           >
             <LayoutComponent>
@@ -47,8 +48,13 @@ function RouterOutlet(props) {
                 <Route path="/projects/:id">
                   <ProjectItem />
                 </Route>
-                <Route path="/projects">
-                  <Project />
+                <Route path="/my-projects">
+                  {
+                    (role)
+                    ? 
+                    <MyProject />
+                    : <Redirect to="/confirmed-projects"/>
+                  }
                 </Route>
                 <Route path="/confirmed-projects">
                   <ConfirmProjectList />
