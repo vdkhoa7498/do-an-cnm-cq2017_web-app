@@ -22,7 +22,7 @@ const tailLayout = {
 
 const DonateProject = () => {
   const [form] = Form.useForm();
-  const address = localStorage.getItem("address");
+  const publicKey = localStorage.getItem("publicKey");
   const history = useHistory();
   const params = useParams();
   const id = parseInt(params.id);
@@ -30,7 +30,7 @@ const DonateProject = () => {
 
   const onFinish = async (values) => {
     const data = values;
-    data.fromAddress = address;
+    data.fromAddress = publicKey;
     data.projectId = id;
     console.log(data)
     await donateProjectService(data)

@@ -11,6 +11,7 @@ const UserProject = () => {
   useEffect(() => {
     getMyCreatedProjectsService(myAddress)
       .then((res) => {
+        console.log(res, "abc")
         setMyCreatedProjectList(res.data);
       })
       .catch((err) => console.log(err));

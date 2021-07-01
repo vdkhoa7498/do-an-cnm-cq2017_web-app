@@ -7,19 +7,19 @@ const {TextArea} = Input
 const columns = [
   {
     title: "Project Name",
-    dataIndex: "projectName",
-    key: "projectName",
+    dataIndex: "project_name",
+    key: "project_name",
   },
   {
     title: "Description",
-    dataIndex: "projectDescription",
-    key: "projectDescription",
+    dataIndex: "project_description",
+    key: "project_description",
     render: text => {return(<TextArea style={{border: "none"}} autoSize={{ minRows: 2, maxRows: 6 }} value={text} />)},
   },
   {
     title: "Start Date",
-    dataIndex: "projectCreateTimestamp",
-    key: "projectCreateTimestamp",
+    dataIndex: "project_create_timestamp",
+    key: "project_create_timestamp",
     render: (projectCreateTimestamp) => {
       const date_ob = new Date(projectCreateTimestamp);
       const year = date_ob.getFullYear();
@@ -34,8 +34,8 @@ const columns = [
   },
   {
     title: "End Date",
-    dataIndex: "projectDeadline",
-    key: "projectDeadline",
+    dataIndex: "project_deadline",
+    key: "project_deadline",
     render: (projectDeadline) => {
       const date_ob = new Date(projectDeadline);
 
@@ -51,7 +51,7 @@ const columns = [
   },
   {
     title: "Status",
-    dataIndex: "projectDeadline",
+    dataIndex: "project_deadline",
     key: "status",
     render: (deadline) => {
       const deadlineDate = new Date(deadline);
@@ -73,12 +73,12 @@ const ProjectList = (props) => {
     <Table
       columns={columns}
       dataSource={data}
-      rowKey="projectId"
+      rowKey="project_id"
       onRow={(record, rowIndex) => {
         return {
           onClick: (event) => {
             console.log(record, rowIndex);
-            history.push(`/projects/${record.projectId}`);
+            history.push(`/projects/${record.project_id}`);
           },
         };
       }}

@@ -6,7 +6,7 @@ import ProjectList from "./components/ProjectList";
 
 const OrganizationProject = () => {
   const [myConfirmedProjectList, setMyConfirmedProjectList] = useState([]);
-  const myAddress = localStorage.getItem("address");
+  const myAddress = localStorage.getItem("publicKey");
 
   useEffect(() => {
     getMyConfirmedProjectsService(myAddress)

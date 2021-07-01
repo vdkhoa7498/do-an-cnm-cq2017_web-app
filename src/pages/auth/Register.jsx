@@ -20,8 +20,8 @@ const Register = (props) =>{
             title: 'Please save your private information',
             content: (
               <div>
-                <strong>Your address:</strong>
-                <p>{res.data.address}</p>
+                <strong>Your publicKey:</strong>
+                <p>{res.data.publicKey}</p>
                 <strong>Your private key:</strong>
                 <p>{res.data.privateKey}</p>
               </div>

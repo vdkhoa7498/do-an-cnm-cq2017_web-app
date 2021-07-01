@@ -14,7 +14,7 @@ const Login = (props) =>{
         .then((res) =>{
             if (res.data.name) {
                 localStorage.setItem('name', res.data.name);
-                localStorage.setItem('address', res.data.address);
+                localStorage.setItem('publicKey', res.data.address);
                 localStorage.setItem('isAuthenticated', true);
                 localStorage.setItem('role', res.data.role);
                 message.success(`Wellcome ${res.data.name}!`)
@@ -48,7 +48,7 @@ const Login = (props) =>{
                     <Input 
                         autoComplete="publicKey"
                         prefix={<UserOutlined style={{ color: 'rgba(0,0,0,.25)' }} />}
-                        placeholder="Address"
+                        placeholder="publicKey"
                     />
                 </Form.Item>
 

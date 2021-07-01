@@ -11,7 +11,7 @@ import { confirmedProjectService, getProjectByIdService } from "../../services/p
 
 const ProjectItem = () => {
   const id = useParams().id;
-  const address = localStorage.getItem("address");
+  const address = localStorage.getItem("publicKey");
   const history = useHistory();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [privateKey, setPrivateKey] = useState(false)
@@ -33,7 +33,7 @@ const ProjectItem = () => {
       .then(res=>{
         if (res.status === 201){
           message.success("Project confirm successful!")
-          history.push(`/projects/${id}`)
+          history.push(0)
           setIsModalVisible(false);
         }
         if (res.status === 204){
