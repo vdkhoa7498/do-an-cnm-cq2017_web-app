@@ -23,7 +23,7 @@ const { TextArea } = Input
 
 const CreateProject = () => {
     const [form] = Form.useForm();
-    const address = localStorage.getItem('address');
+    const address = localStorage.getItem('publicKey');
     const history = useHistory();
 
     const onFinish = async(values) => {
